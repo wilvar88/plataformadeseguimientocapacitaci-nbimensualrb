@@ -1,0 +1,414 @@
+/* Luxury Frosted Glassmorphism Style for Recaudo Bogotá Dashboard */
+/* Corporate Palette:
+   Deep Brand Navy: #001e47
+   Vibrant Brand Lime: #CDD400
+   Pure Frost White: #FFFFFF
+*/
+
+:root {
+    --rb-navy: #001e47;
+    --rb-navy-deep: #00122e;
+    --rb-lime: #CDD400;
+    --rb-white: #ffffff;
+    --rb-glass-bg: rgba(255, 255, 255, 0.075);
+    --rb-glass-border: rgba(255, 255, 255, 0.18);
+    --rb-glass-lime-border: rgba(205, 212, 0, 0.34);
+}
+
+body {
+    background-color: var(--rb-navy);
+    background-image:
+        radial-gradient(ellipse 80% 55% at 15% 0%, rgba(205, 212, 0, 0.13) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 60% at 90% 10%, rgba(255, 255, 255, 0.10) 0%, transparent 55%),
+        radial-gradient(circle at 50% 100%, #002a63 0%, #001e47 55%, #001029 100%);
+    background-attachment: fixed;
+    color: var(--rb-white);
+}
+
+/* Luxury Frosted Glass Panels */
+.glass-panel {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.04) 48%, rgba(0, 30, 71, 0.68) 100%);
+    backdrop-filter: blur(28px) saturate(175%);
+    -webkit-backdrop-filter: blur(28px) saturate(175%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-top: 1px solid rgba(255, 255, 255, 0.32);
+    border-left: 1px solid rgba(205, 212, 0, 0.32);
+    box-shadow:
+        0 14px 36px -6px rgba(0, 12, 34, 0.65),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.24),
+        inset 0 0 24px rgba(255, 255, 255, 0.03);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    border-radius: 18px;
+}
+
+.glass-panel:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 20px 44px -8px rgba(0, 10, 28, 0.78),
+        0 0 24px -4px rgba(205, 212, 0, 0.18),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.32);
+    border-color: rgba(205, 212, 0, 0.45);
+}
+
+/* Evitar desplazamiento o corte de bordes en Navbar y Modales */
+nav.glass-panel,
+nav.glass-panel:hover,
+.modal-shell,
+.modal-shell:hover {
+    transform: none !important;
+}
+
+.modal-shell {
+    border: 1.5px solid rgba(205, 212, 0, 0.42);
+    box-shadow: 0 25px 65px rgba(0, 8, 24, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    border-radius: 18px;
+}
+
+/* Tarjetas explicativas clicables de Recurrencia */
+.recurrencia-kpi-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recurrencia-kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(205, 212, 0, 0.7) !important;
+    box-shadow: 0 10px 26px rgba(0, 12, 34, 0.65), 0 0 16px rgba(205, 212, 0, 0.18);
+}
+
+/* Acordeón de Unidades con múltiples capítulos */
+.unit-accordion {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 24, 58, 0.72) 100%);
+    border: 1px solid rgba(205, 212, 0, 0.30);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.unit-accordion:hover {
+    border-color: rgba(205, 212, 0, 0.65);
+}
+
+.unit-accordion-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.unit-chevron {
+    transition: transform 0.25s ease;
+}
+
+.unit-chevron.open {
+    transform: rotate(180deg);
+}
+
+.glass-subpanel {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 30, 71, 0.52) 100%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Luxury Buttons */
+.luxury-btn-primary {
+    background: linear-gradient(135deg, #CDD400 0%, #dce424 100%);
+    color: #001e47;
+    font-weight: 800;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 6px 20px rgba(205, 212, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.luxury-btn-primary:hover {
+    transform: translateY(-1px) scale(1.015);
+    box-shadow: 0 10px 28px rgba(205, 212, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.luxury-btn-secondary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
+    color: #ffffff;
+    font-weight: 700;
+    border: 1px solid rgba(205, 212, 0, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 16px rgba(0, 12, 34, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    transition: all 0.25s ease;
+}
+
+.luxury-btn-secondary:hover {
+    background: linear-gradient(135deg, rgba(205, 212, 0, 0.22) 0%, rgba(255, 255, 255, 0.12) 100%);
+    border-color: #CDD400;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.luxury-input {
+    background: rgba(0, 20, 50, 0.72) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.luxury-input:focus {
+    outline: none !important;
+    border-color: #CDD400 !important;
+    box-shadow: 0 0 0 2px rgba(205, 212, 0, 0.22), inset 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+}
+
+.luxury-input::placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 20, 48, 0.55);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(205, 212, 0, 0.75);
+}
+
+/* Progress bar approximations - Frosted Glass Tubes */
+.table-progress-bar {
+    height: 10px;
+    border-radius: 9999px;
+    background: rgba(0, 14, 36, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    overflow: hidden;
+    margin-top: 6px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.table-progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 2.2s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.45), 0 0 12px rgba(205, 212, 0, 0.45);
+}
+
+.participation-fill {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, #CDD400 100%);
+}
+
+.approval-fill {
+    background: linear-gradient(90deg, #98a920 0%, #CDD400 55%, #ffffff 100%);
+}
+
+/* Texts and Gradients */
+.text-gradient-sky {
+    background: linear-gradient(90deg, #ffffff 0%, #CDD400 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-accent-lime {
+    color: #CDD400;
+}
+
+/* Badges para Trazabilidad & Estados */
+.badge-risk {
+    background-color: rgba(239, 68, 68, 0.18);
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    color: #fecaca;
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.18);
+    border: 1px solid rgba(251, 191, 36, 0.45);
+    color: #fef08a;
+}
+
+.badge-success {
+    background-color: rgba(205, 212, 0, 0.18);
+    border: 1px solid rgba(205, 212, 0, 0.55);
+    color: #eef56b;
+}
+
+.badge-info {
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+}
+
+/* Format Badges */
+.badge-fmt-mp4 {
+    background: rgba(205, 212, 0, 0.16);
+    border: 1px solid rgba(205, 212, 0, 0.48);
+    color: #CDD400;
+}
+
+.badge-fmt-pdf {
+    background: rgba(239, 68, 68, 0.16);
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    color: #fca5a5;
+}
+
+.badge-fmt-scorm {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    color: #ffffff;
+}
+
+.badge-fmt-link {
+    background: rgba(56, 189, 248, 0.16);
+    border: 1px solid rgba(56, 189, 248, 0.42);
+    color: #bae6fd;
+}
+
+/* Forzar contraste legible en buscadores */
+#historico-search-colab,
+#gh-search-colab {
+    background-color: rgba(0, 20, 50, 0.85) !important;
+    color: #ffffff !important;
+}
+
+/* Tarjeta Histórica de Capacitaciones con Fondo Completo */
+.historico-card {
+    position: relative;
+    overflow: hidden;
+    background-color: #001e47;
+    border: 1px solid rgba(205, 212, 0, 0.38);
+    border-top: 1px solid rgba(255, 255, 255, 0.38);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 14px 30px rgba(0, 12, 34, 0.65);
+}
+
+.historico-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(205, 212, 0, 0.85);
+    box-shadow: 0 18px 40px rgba(0, 10, 28, 0.85), 0 0 24px rgba(205, 212, 0, 0.25);
+}
+
+.card-full-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px);
+    opacity: 0.46;
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.6s ease;
+}
+
+.historico-card:hover .card-full-bg {
+    transform: scale(1.06);
+    opacity: 0.62;
+}
+
+.card-full-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 22, 54, 0.68) 0%, rgba(0, 30, 71, 0.84) 48%, rgba(0, 14, 36, 0.96) 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.area-breakdown-box {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(205, 212, 0, 0.26);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.area-breakdown-box:hover {
+    border-color: rgba(205, 212, 0, 0.65);
+    background: rgba(0, 30, 71, 0.88);
+}
+
+/* Pestañas del Modal Histórico */
+.historico-tab {
+    position: relative;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+}
+
+.historico-tab.active {
+    color: #CDD400 !important;
+    border-bottom: 2px solid #CDD400;
+    text-shadow: 0 0 12px rgba(205, 212, 0, 0.45);
+}
+
+/* Documento Acta Disciplinaria */
+.acta-paper {
+    background: #ffffff;
+    color: #0f172a;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* Print Rules for Acta de Soporte Disciplinario */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 12mm;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    body > *:not(#acta-modal) {
+        display: none !important;
+    }
+
+    #acta-modal {
+        position: static !important;
+        display: block !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        backdrop-filter: none !important;
+        overflow: visible !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    #acta-modal-shell {
+        max-width: 100% !important;
+        max-height: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+    }
+
+    #acta-modal-toolbar {
+        display: none !important;
+    }
+
+    #acta-scroll-body {
+        padding: 0 !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+    }
+
+    #acta-printable-area {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}

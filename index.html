@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Recaudo Bogotá - Ecosistema de Capacitaciones</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css?v=3.0">
+
+    <!-- Configuración corporativa de colores para Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#001e47',
+                            panel: 'transparent',
+                            primary: '#CDD400',
+                            accent: '#ffffff',
+                            text: '#ffffff',
+                            muted: '#cbd5e1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-brand-text min-h-screen font-sans antialiased relative overflow-x-hidden">
+    <!-- Luxury Frosted Ambient Glows -->
+    <div class="fixed top-[-15%] left-[-10%] w-[45%] h-[55%] rounded-full bg-[#CDD400] opacity-[0.09] blur-[140px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-15%] right-[-10%] w-[45%] h-[55%] rounded-full bg-white opacity-[0.07] blur-[140px] pointer-events-none z-0"></div>
+    <div class="fixed top-[25%] left-[25%] w-[50%] h-[50%] rounded-full bg-[#002e6b] opacity-40 blur-[120px] pointer-events-none z-0"></div>
+
+    <!-- Navbar -->
+    <nav class="glass-panel border-b border-white/15 px-4 sm:px-8 py-3.5 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3 z-20 relative rounded-none border-x-0 border-t-0">
+        <div class="flex items-center space-x-4">
+            <div class="bg-white/10 border border-white/25 rounded-2xl px-3 py-1.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.25)] flex items-center justify-center">
+                <img src="https://wilvar88.github.io/Imagenes/FONDO TRANSPARENTE + LETRAS VERDES.png"
+                     alt="Recaudo Bogotá Logo"
+                     class="h-10 sm:h-11 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">RECAUDO BOGOTÁ</h1>
+                    <span class="hidden sm:inline-block text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#CDD400]/20 text-[#CDD400] border border-[#CDD400]/40">
+                        Ecosistema Formación
+                    </span>
+                </div>
+                <button id="role-badge" onclick="handleRoleBadgeClick()"
+                    class="text-xs font-semibold mt-1 px-3 py-0.5 rounded-full border transition-all cursor-pointer hover:scale-105 active:scale-95"
+                    style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.22); color: #e2e8f0;">
+                    🔓 Invitado
+                </button>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center text-xs sm:text-sm text-white/80 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-inner">
+                <span class="mr-2 text-white/60">Última actualización:</span>
+                <span id="last-update" class="font-bold text-[#CDD400]">Cargando...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="p-4 sm:p-6 max-w-7xl mx-auto space-y-6 relative z-10">
+
+        <!-- Header Section -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 mb-2">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#CDD400] mb-1">Plataforma de Seguimiento Bimensual</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Visión General de Capacitaciones</h2>
+                <p class="text-sm text-white/70 mt-1">Métricas clave, trazabilidad por colaborador, contenido multimedia y soporte documental para Gestión Humana.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+                <button id="btn-historico" onclick="openHistoricoModal('cards')" class="hidden luxury-btn-secondary px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs sm:text-sm">
+                    <svg class="w-4 h-4 text-[#CDD400]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Histórico &amp; Trazabilidad</span>
+                </button>
+                <button id="btn-gh-panel" onclick="openHistoricoModal('gh')" class="hidden luxury-btn-primary px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs sm:text-sm">
+                    <svg class="w-4 h-4 text-[#001e47]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Gestión Humana &amp; Actas</span>
+                </button>
+                <button id="btn-superadmin-content" onclick="openHistoricoModal('catalogo')" class="hidden luxury-btn-secondary px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs sm:text-sm border-[#CDD400]/60">
+                    <svg class="w-4 h-4 text-[#CDD400]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Subir Contenido (Super Admin)</span>
+                </button>
+                <button id="btn-superadmin-audit" onclick="openHistoricoModal('auditoria')" class="hidden luxury-btn-secondary px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs sm:text-sm border-[#CDD400]/60">
+                    <span>🛡️</span>
+                    <span>Auditoría &amp; Usabilidad</span>
+                </button>
+                <a id="btn-download" href="#" class="hidden luxury-btn-secondary px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs sm:text-sm">
+                    <svg class="w-4 h-4 text-[#CDD400]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span>Exportar (.xlsx)</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Participación KPI -->
+            <div class="glass-panel p-6 flex flex-col justify-between relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-white/70 text-xs font-bold uppercase tracking-widest">Participación Global</h3>
+                    <div class="p-2 rounded-xl bg-white/10 border border-white/15">
+                        <svg class="w-5 h-5 text-[#CDD400]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span id="kpi-participation" class="text-4xl font-extrabold text-white leading-none">--%</span>
+                    <p class="text-xs text-white/60 mt-2">Asistentes / Inscritos</p>
+                </div>
+                <div class="absolute bottom-4 right-5 text-3xl font-black text-[#CDD400] drop-shadow-[0_0_12px_rgba(205,212,0,0.45)] z-10" id="kpi-part-count"></div>
+            </div>
+
+            <!-- Aprobación KPI -->
+            <div class="glass-panel p-6 flex flex-col justify-between relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-white/70 text-xs font-bold uppercase tracking-widest">Aprobación Global</h3>
+                    <div class="p-2 rounded-xl bg-white/10 border border-white/15">
+                        <svg class="w-5 h-5 text-[#CDD400]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span id="kpi-approval" class="text-4xl font-extrabold text-white leading-none">--%</span>
+                    <p class="text-xs text-white/60 mt-2">Aprobados / Inscritos</p>
+                </div>
+                <div class="absolute bottom-4 right-5 text-3xl font-black text-[#CDD400] drop-shadow-[0_0_12px_rgba(205,212,0,0.45)] z-10" id="kpi-appr-count"></div>
+            </div>
+
+            <!-- Total Courses KPI -->
+            <div class="glass-panel p-6 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-white/70 text-xs font-bold uppercase tracking-widest">Total Cursos</h3>
+                    <div class="p-2 rounded-xl bg-white/10 border border-white/15">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span id="kpi-courses" class="text-4xl font-extrabold text-white leading-none">--</span>
+                    <p class="text-xs text-white/60 mt-2">En el período actual</p>
+                </div>
+            </div>
+
+            <!-- Total Attendees KPI -->
+            <div class="glass-panel p-6 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-white/70 text-xs font-bold uppercase tracking-widest">Colaboradores</h3>
+                    <div class="p-2 rounded-xl bg-white/10 border border-white/15">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span id="kpi-attendees" class="text-4xl font-extrabold text-white leading-none">--</span>
+                    <p class="text-xs text-white/60 mt-2">Impactados globalmente</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Tables Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Bar Chart -->
+            <div class="glass-panel p-6 lg:col-span-2 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-white">Comparativa por Curso (% Participación vs % Aprobación)</h3>
+                    <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-[#CDD400]">Período Activo</span>
+                </div>
+                <div class="flex-grow relative h-64 sm:h-80 w-full">
+                    <canvas id="coursesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Valoración Global Panel -->
+            <div class="glass-panel p-5 flex flex-col justify-center cursor-pointer hover:border-[#CDD400] transition-all group" onclick="openRatingsModal()" style="min-height: 0;">
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="text-base font-bold text-[#CDD400] group-hover:text-white transition-colors">Calificación del Curso (Valoraciones)</h3>
+                    <svg class="w-4 h-4 text-white/60 group-hover:text-[#CDD400] transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-white/70">Promedio de Valoración</span>
+                        <div class="flex items-center bg-white/10 border border-white/20 rounded-xl px-2.5 py-0.5 shadow-inner">
+                            <span id="kpi-avg-rating" class="text-2xl font-extrabold text-[#CDD400]">-.--</span>
+                            <svg class="w-5 h-5 text-[#CDD400] ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                        <span class="text-xs font-medium text-white/70">Cantidad de Valoraciones</span>
+                        <span id="kpi-rating-count" class="text-xl font-bold text-white">--</span>
+                    </div>
+                    <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                        <span class="text-xs font-medium text-white/70">% Valoración vs Inscritos</span>
+                        <span id="kpi-rating-participation" class="text-xl font-bold text-[#CDD400]">--%</span>
+                    </div>
+
+                    <!-- Gender breakdown -->
+                    <div class="grid grid-cols-2 gap-2.5 pt-1">
+                        <div class="bg-white/5 border border-white/15 rounded-xl p-2.5">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <span class="text-base">&#9792;&#65039;</span>
+                                <span class="text-xs font-bold text-white">Femenino</span>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">Valoración</span>
+                                    <span id="kpi-f-avg" class="text-sm font-bold text-[#CDD400]">-.--</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">Cant. Val.</span>
+                                    <span id="kpi-f-count" class="text-sm font-bold text-white">--</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">% Val.</span>
+                                    <span id="kpi-f-pct" class="text-sm font-bold text-white/90">--%</span>
+                                </div>
+                                <div class="flex justify-between items-center border-t border-white/10 pt-1 mt-1">
+                                    <span class="text-[10px] text-white/60">Inscritas</span>
+                                    <span id="kpi-f-enrolled" class="text-sm font-bold text-white">--</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">% Part.</span>
+                                    <span id="kpi-f-part" class="text-sm font-bold text-[#CDD400]">--%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 border border-white/15 rounded-xl p-2.5">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <span class="text-base">&#9794;&#65039;</span>
+                                <span class="text-xs font-bold text-white">Masculino</span>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">Valoración</span>
+                                    <span id="kpi-m-avg" class="text-sm font-bold text-[#CDD400]">-.--</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">Cant. Val.</span>
+                                    <span id="kpi-m-count" class="text-sm font-bold text-white">--</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">% Val.</span>
+                                    <span id="kpi-m-pct" class="text-sm font-bold text-white/90">--%</span>
+                                </div>
+                                <div class="flex justify-between items-center border-t border-white/10 pt-1 mt-1">
+                                    <span class="text-[10px] text-white/60">Inscritos</span>
+                                    <span id="kpi-m-enrolled" class="text-sm font-bold text-white">--</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-white/60">% Part.</span>
+                                    <span id="kpi-m-part" class="text-sm font-bold text-[#CDD400]">--%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Data Table -->
+        <div class="glass-panel overflow-hidden mt-6 mb-8">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Detalle de Ejecuciones de Cursos</h3>
+                <span class="text-xs text-white/60">Indicadores del período activo</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-white/5 text-[#CDD400] uppercase tracking-wider text-xs font-bold">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Nombre del Curso</th>
+                            <th scope="col" class="px-6 py-4 text-center">Inscritos</th>
+                            <th scope="col" class="px-6 py-4 text-center">% Participación</th>
+                            <th scope="col" class="px-6 py-4 text-center">% Aprobación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-white/10">
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-white/60">Cargando datos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Data Table Areas -->
+        <div class="glass-panel overflow-hidden mt-6 mb-8">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Desempeño por Área (Clic para ver participantes)</h3>
+                <span class="text-xs text-[#CDD400] font-medium">Haz clic en cualquier área</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-white/5 text-[#CDD400] uppercase tracking-wider text-xs font-bold">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Nombre del Área</th>
+                            <th scope="col" class="px-6 py-4 text-center">Inscritos</th>
+                            <th scope="col" class="px-6 py-4 text-center">% Participación</th>
+                            <th scope="col" class="px-6 py-4 text-center">% Aprobación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="areas-table-body" class="divide-y divide-white/10">
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-white/60">Cargando datos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-4 pt-4 mb-2 text-center text-xs sm:text-sm font-medium text-white/45">
+            Esta página pertenece a Wilson Varela &copy; Recaudo Bogotá — Todos los derechos reservados.
+        </footer>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- MODALES GLOBALES (Fuera de <main> para z-index limpio sobre Navbar) -->
+    <!-- ============================================================ -->
+
+    <!-- Participants Modal -->
+    <div id="participants-modal" class="fixed inset-0 hidden bg-[#001433]/80 flex-col items-center justify-center z-[75] backdrop-blur-md p-3 sm:p-6 transition-all duration-300">
+        <div class="glass-panel modal-shell w-full max-w-5xl max-h-[88vh] overflow-hidden flex flex-col">
+            <div class="p-5 sm:p-6 border-b border-white/10 flex justify-between items-center bg-black/30">
+                <h3 class="text-xl font-bold text-[#CDD400]" id="modal-title">Participantes del Área</h3>
+                <button onclick="closeModal()" class="text-white/70 hover:text-[#CDD400] transition-all text-3xl leading-none px-1">&times;</button>
+            </div>
+            <div class="p-0 overflow-y-auto flex-1">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-[#001433]/95 text-[#CDD400] uppercase tracking-wider text-xs sticky top-0 z-10 backdrop-blur-xl border-b border-white/10">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 font-bold">Nombre del Participante</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Curso</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-tbody" class="divide-y divide-white/10 bg-transparent"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ratings Modal -->
+    <div id="ratings-modal" class="fixed inset-0 hidden bg-[#001433]/80 flex-col items-center justify-center z-[75] backdrop-blur-md p-3 sm:p-6 transition-all duration-300">
+        <div class="glass-panel modal-shell w-full max-w-[92vw] xl:max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="p-5 sm:p-6 border-b border-white/10 flex justify-between items-center bg-black/30">
+                <h3 class="text-2xl font-bold text-[#CDD400]">Análisis de Valoraciones y Comentarios</h3>
+                <button onclick="closeRatingsModal()" class="text-white/70 hover:text-white transition-all text-4xl leading-none px-1">&times;</button>
+            </div>
+            <div class="p-6 sm:p-8 overflow-y-auto flex-1 space-y-8">
+                <div class="grid grid-cols-3 gap-6 border-b border-white/10 pb-8">
+                    <div class="text-center">
+                        <p class="text-xs text-white/60 mb-2 uppercase tracking-wider font-semibold">Promedio global</p>
+                        <p class="text-4xl font-bold text-white flex items-center justify-center gap-2" id="modal-avg-rating">-.--</p>
+                    </div>
+                    <div class="text-center border-l border-white/10">
+                        <p class="text-xs text-white/60 mb-2 uppercase tracking-wider font-semibold">Valoraciones Totales</p>
+                        <p class="text-4xl font-bold text-white" id="modal-rating-count">--</p>
+                    </div>
+                    <div class="text-center border-l border-white/10">
+                        <p class="text-xs text-white/60 mb-2 uppercase tracking-wider font-semibold">% vs Participación</p>
+                        <p class="text-4xl font-bold text-[#CDD400]" id="modal-rating-participation">--%</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white/5 border border-[#CDD400]/30 rounded-2xl p-6 shadow-inner h-full">
+                        <h4 class="text-[#CDD400] font-bold mb-4 flex items-center gap-3 text-xl border-b border-white/10 pb-3">
+                            Puntos Fuertes y Logros
+                        </h4>
+                        <p class="text-base text-white/90 leading-relaxed font-light whitespace-pre-wrap" id="ai-positive-text">Cargando análisis...</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/20 rounded-2xl p-6 shadow-inner h-full">
+                        <h4 class="text-white font-bold mb-4 flex items-center gap-3 text-xl border-b border-white/10 pb-3">
+                            Oportunidades de Mejora
+                        </h4>
+                        <p class="text-base text-white/90 leading-relaxed font-light whitespace-pre-wrap" id="ai-improvement-text">Cargando análisis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ECOSISTEMA HISTÓRICO, GESTIÓN HUMANA, CONTENIDO & AUDITORÍA -->
+    <!-- ============================================================ -->
+    <div id="historico-modal" class="fixed inset-0 hidden bg-[#00122e]/85 flex-col items-center justify-center z-[80] backdrop-blur-xl p-3 sm:p-5 transition-all duration-300">
+        <div class="glass-panel modal-shell w-full max-w-[96vw] 2xl:max-w-[1680px] max-h-[92vh] overflow-hidden flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-white/15 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-black/35 gap-3 flex-shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/10 border border-white/20 rounded-xl p-1.5 flex-shrink-0">
+                        <img src="https://wilvar88.github.io/Imagenes/FONDO TRANSPARENTE + LETRAS VERDES.png" alt="RB" class="h-8 w-auto object-contain">
+                    </div>
+                    <div>
+                        <h3 class="text-lg sm:text-2xl font-extrabold text-white flex flex-wrap items-center gap-2">
+                            Ecosistema Histórico, Gestión Humana &amp; Contenidos
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-[#CDD400]/20 border border-[#CDD400]/50 text-[#CDD400] font-mono">RB-GH</span>
+                        </h3>
+                        <p class="text-xs text-white/70">Trazabilidad por colaborador, contenido detallado visto, notas/observaciones y actas de soporte disciplinario.</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2.5 w-full sm:w-auto justify-end flex-shrink-0">
+                    <button onclick="downloadHistoricoReport()" class="luxury-btn-secondary px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5">
+                        <svg class="w-4 h-4 text-[#CDD400]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Descargar Histórico (.csv)</span>
+                    </button>
+                    <button onclick="closeHistoricoModal()" class="text-white/75 hover:text-[#CDD400] transition-all text-3xl sm:text-4xl leading-none px-2" title="Cerrar">&times;</button>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="flex overflow-x-auto border-b border-white/15 bg-black/25 px-4 sm:px-6 pt-3 space-x-6 flex-shrink-0">
+                <button id="tab-btn-cards" onclick="switchHistoricoTab('cards')" class="historico-tab active font-bold text-xs sm:text-sm pb-3 text-white">
+                    📊 Visión General (Programas)
+                </button>
+                <button id="tab-btn-trazabilidad" onclick="switchHistoricoTab('trazabilidad')" class="historico-tab font-bold text-xs sm:text-sm pb-3 text-white/65 hover:text-white">
+                    👥 Trazabilidad &amp; Recurrencia
+                </button>
+                <button id="tab-btn-gh" onclick="switchHistoricoTab('gh')" class="historico-tab font-bold text-xs sm:text-sm pb-3 text-white/65 hover:text-white">
+                    ⚖️ Gestión Humana: Contenido, Notas &amp; Actas
+                </button>
+                <button id="tab-btn-catalogo" onclick="switchHistoricoTab('catalogo')" class="historico-tab font-bold text-xs sm:text-sm pb-3 text-white/65 hover:text-white">
+                    📚 Catálogo de Contenidos <span id="badge-superadmin-tab" class="hidden ml-1 px-1.5 py-0.5 text-[10px] rounded bg-[#CDD400] text-[#001e47] font-black">SUPER ADMIN</span>
+                </button>
+                <button id="tab-btn-auditoria" onclick="switchHistoricoTab('auditoria')" class="hidden historico-tab font-bold text-xs sm:text-sm pb-3 text-white/65 hover:text-white">
+                    🛡️ Auditoría &amp; Usabilidad <span class="ml-1 px-1.5 py-0.5 text-[10px] rounded bg-[#CDD400] text-[#001e47] font-black">JSON</span>
+                </button>
+            </div>
+
+            <!-- Content Body -->
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
+
+                <!-- Tab 1: Cards View -->
+                <div id="tab-content-cards" class="space-y-6">
+                    <div class="flex justify-between items-center bg-white/5 p-3.5 rounded-xl border border-white/15">
+                        <div class="flex items-center space-x-2 text-xs text-white/80">
+                            <span class="text-[#CDD400] font-bold">●</span>
+                            <span class="font-medium">Capacitaciones Principales (Consolidado Histórico)</span>
+                        </div>
+                        <span id="historico-cards-count" class="text-xs font-bold text-[#CDD400]">-- Tarjeta(s) de Capacitación</span>
+                    </div>
+                    <div id="historico-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+
+                <!-- Tab 2: Colaboradores Trazabilidad View -->
+                <div id="tab-content-trazabilidad" class="hidden space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white/5 p-4 rounded-xl border border-white/15">
+                        <div>
+                            <label class="block text-xs font-bold text-white/70 uppercase mb-1">Filtrar por Área</label>
+                            <select id="historico-filter-area" onchange="filterHistoricoColaboradores()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todas las Áreas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-white/70 uppercase mb-1">Buscar Colaborador</label>
+                            <input id="historico-search-colab" oninput="filterHistoricoColaboradores()" type="text" placeholder="Buscar por Cédula o Nombre..." class="luxury-input w-full rounded-lg px-3.5 py-2 text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-white/70 uppercase mb-1">Estado de Recurrencia</label>
+                            <select id="historico-filter-status" onchange="filterHistoricoColaboradores()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todos los Registros</option>
+                                <option value="CRITICAL">⚠️ Alta Recurrencia de Riesgo (&lt;50% part/aprob)</option>
+                                <option value="LOW_PART">🚫 Recurrencia en No Participación (&lt;70%)</option>
+                                <option value="LOW_APR">❌ Recurrencia en No Aprobación (&lt;70%)</option>
+                                <option value="OK">✅ Cumplimiento Destacado (&ge;70%)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div id="kpi-card-total-eval" onclick="openRecurrenciaInfoModal('total')" class="glass-subpanel recurrencia-kpi-card p-4 flex items-center justify-between gap-3" title="Clic para ver cómo se calcula este indicador">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-3 bg-white/10 rounded-xl text-[#CDD400] font-bold text-xl">👥</div>
+                                <div>
+                                    <p class="text-xs text-white/70 font-medium">Total Evaluados</p>
+                                    <p id="kpi-colab-total" class="text-2xl font-extrabold text-white">0</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-bold px-2 py-1 rounded-lg bg-white/10 text-white/80 border border-white/15">ℹ️ Criterio</span>
+                        </div>
+                        <div id="kpi-card-no-part" onclick="openRecurrenciaInfoModal('no_part')" class="glass-subpanel recurrencia-kpi-card p-4 flex items-center justify-between gap-3 border-red-400/30" title="Clic para ver con base en qué se calcula este dato">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-3 bg-red-500/20 rounded-xl text-red-300 font-bold text-xl">⚠️</div>
+                                <div>
+                                    <p class="text-xs text-red-200 font-medium">Recurrencia No Participación</p>
+                                    <p id="kpi-colab-no-part" class="text-2xl font-extrabold text-red-300">0</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-bold px-2 py-1 rounded-lg bg-red-500/20 text-red-200 border border-red-400/30">ℹ️ ¿Qué es?</span>
+                        </div>
+                        <div id="kpi-card-no-apr" onclick="openRecurrenciaInfoModal('no_apr')" class="glass-subpanel recurrencia-kpi-card p-4 flex items-center justify-between gap-3 border-yellow-400/30" title="Clic para ver con base en qué se calcula este dato">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-3 bg-yellow-500/20 rounded-xl text-yellow-300 font-bold text-xl">❌</div>
+                                <div>
+                                    <p class="text-xs text-yellow-200 font-medium">Recurrencia No Aprobación</p>
+                                    <p id="kpi-colab-no-apr" class="text-2xl font-extrabold text-yellow-300">0</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-bold px-2 py-1 rounded-lg bg-yellow-500/20 text-yellow-200 border border-yellow-400/30">ℹ️ ¿Qué es?</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-xl overflow-hidden border border-white/15">
+                        <div class="w-full overflow-x-auto">
+                            <table class="w-full text-left text-xs sm:text-sm">
+                                <thead class="bg-[#001433]/90 text-[#CDD400] uppercase tracking-wider border-b border-white/15 font-bold">
+                                    <tr>
+                                        <th class="px-3.5 py-3">Cédula</th>
+                                        <th class="px-3.5 py-3">Nombre del Colaborador</th>
+                                        <th class="px-3.5 py-3">Área</th>
+                                        <th class="px-3.5 py-3 text-center">Asignados</th>
+                                        <th class="px-3.5 py-3 text-center">Participados</th>
+                                        <th class="px-3.5 py-3 text-center">Aprobados</th>
+                                        <th class="px-3.5 py-3 text-center">% Part.</th>
+                                        <th class="px-3.5 py-3 text-center">% Aprob.</th>
+                                        <th class="px-3.5 py-3 text-center">Recurrencia / Alerta</th>
+                                        <th class="px-3.5 py-3 text-center">Gestión Humana</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historico-table-body" class="divide-y divide-white/10"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Gestión Humana - Contenido, Notas & Actas Disciplinarias -->
+                <div id="tab-content-gh" class="hidden space-y-5">
+                    <div class="glass-subpanel p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-[#CDD400]/35">
+                        <div>
+                            <h4 class="text-sm sm:text-base font-extrabold text-[#CDD400] flex items-center gap-2">
+                                <span>⚖️ Consulta de Contenido Visto, Calificaciones &amp; Soporte para Procesos Disciplinarios</span>
+                            </h4>
+                            <p class="text-xs text-white/75 mt-1">
+                                Busca por <strong>Nombre / Cédula del colaborador</strong>, <strong>Mes / Programa</strong> o <strong>Capacitación</strong>. Si el colaborador estuvo <em>Inscrito</em> o <em>En Curso</em> sin presentar evaluación, el sistema asigna nota <strong>0</strong> con su observación oficial y genera el <strong>Acta de Soporte</strong>.
+                            </p>
+                        </div>
+                        <div id="gh-sync-status" class="text-[11px] font-semibold px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-white whitespace-nowrap">
+                            ⏳ Sincronizando hoja Histórico...
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 bg-white/5 p-4 rounded-xl border border-white/15">
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase tracking-wider mb-1">Colaborador (Nombre o Cédula)</label>
+                            <input id="gh-search-colab" oninput="filterGHRecords()" type="text" placeholder="Ej: Kelly Davila o 1050067060..."
+                                class="luxury-input w-full rounded-lg px-3.5 py-2 text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase tracking-wider mb-1">Mes / Programa (Col. A)</label>
+                            <select id="gh-filter-mes" onchange="onGHProgramaChange()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todos los Meses / Programas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase tracking-wider mb-1">Capacitación (Col. B)</label>
+                            <select id="gh-filter-curso" onchange="filterGHRecords()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todas las Capacitaciones</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase tracking-wider mb-1">Estado del Curso (Col. G)</label>
+                            <select id="gh-filter-estado" onchange="filterGHRecords()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todos los Estados</option>
+                                <option value="Aprobado">✅ Aprobado</option>
+                                <option value="No Aprobado">❌ No Aprobó (Nota insuficiente)</option>
+                                <option value="En curso">⏸️ En Curso (Sin culminar / Nota 0)</option>
+                                <option value="Inscrito">🚫 Inscrito (Nunca ingresó / Nota 0)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <div class="glass-subpanel p-3 text-center">
+                            <p class="text-[10px] uppercase tracking-wider text-white/60 font-bold">Registros Filtrados</p>
+                            <p id="gh-stat-total" class="text-xl font-extrabold text-white mt-0.5">0</p>
+                        </div>
+                        <div class="glass-subpanel p-3 text-center border-[#CDD400]/30">
+                            <p class="text-[10px] uppercase tracking-wider text-[#CDD400] font-bold">Aprobados</p>
+                            <p id="gh-stat-aprobado" class="text-xl font-extrabold text-[#CDD400] mt-0.5">0</p>
+                        </div>
+                        <div class="glass-subpanel p-3 text-center border-red-400/30">
+                            <p class="text-[10px] uppercase tracking-wider text-red-300 font-bold">No Aprobó</p>
+                            <p id="gh-stat-noaprobado" class="text-xl font-extrabold text-red-300 mt-0.5">0</p>
+                        </div>
+                        <div class="glass-subpanel p-3 text-center border-yellow-400/30">
+                            <p class="text-[10px] uppercase tracking-wider text-yellow-200 font-bold">En Curso (0)</p>
+                            <p id="gh-stat-encurso" class="text-xl font-extrabold text-yellow-200 mt-0.5">0</p>
+                        </div>
+                        <div class="glass-subpanel p-3 text-center border-orange-400/30">
+                            <p class="text-[10px] uppercase tracking-wider text-orange-300 font-bold">Inscritos s/Ingreso (0)</p>
+                            <p id="gh-stat-inscrito" class="text-xl font-extrabold text-orange-300 mt-0.5">0</p>
+                        </div>
+                    </div>
+
+                    <div id="gh-results-container" class="space-y-4">
+                        <div class="glass-subpanel p-8 text-center text-white/70 text-sm">
+                            Ingresa el nombre o cédula del colaborador, o selecciona un Mes/Capacitación para consultar su nota, contenido visto y descargar el acta.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Catálogo de Contenidos & Carga (Super Admin) -->
+                <div id="tab-content-catalogo" class="hidden space-y-6">
+                    <div id="superadmin-content-panel" class="hidden glass-subpanel p-5 border border-[#CDD400]/50 space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-white/15 pb-3">
+                            <div>
+                                <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#CDD400] text-[#001e47]">Exclusivo Super Administrador</span>
+                                <h4 class="text-lg font-extrabold text-white mt-1.5">Cargar Nuevo Material y Sincronizar Hoja "Contenido de Capacitación"</h4>
+                                <p class="text-xs text-white/70">Agrega unidades, capítulos y enlaces (.mp4, .pdf, Scorm, Link) al ecosistema y créalos en Google Sheets.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="syncContentSheetToGoogle()" class="luxury-btn-primary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                                    <span>🔄</span>
+                                    <span>Crear / Sincronizar Hoja en Google Sheets</span>
+                                </button>
+                                <button onclick="exportContentSheetCSV()" class="luxury-btn-secondary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                                    <span>📥</span>
+                                    <span>Descargar Hoja (.csv)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Mes (*)</label>
+                                <input id="sa-mes" type="text" placeholder="Ej: Julio - Agosto 2026" class="luxury-input w-full rounded-lg px-3 py-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Programa (** Col. A)</label>
+                                <input id="sa-programa" type="text" placeholder="Ej: Capacitación bimensual Julio-Agosto 2026" class="luxury-input w-full rounded-lg px-3 py-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Capacitación (- Col. B)</label>
+                                <input id="sa-capacitacion" type="text" placeholder="Ej: Capacitación Bimensual Julio 2026-RA" class="luxury-input w-full rounded-lg px-3 py-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Formato</label>
+                                <select id="sa-formato" class="luxury-input w-full rounded-lg px-3 py-2 text-xs">
+                                    <option value=".mp4">.mp4 (Video)</option>
+                                    <option value=".pdf">.pdf (Documento)</option>
+                                    <option value="Scorm">Scorm (Interactivo)</option>
+                                    <option value="Link">Link (Enlace externo)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Unidad</label>
+                                <input id="sa-unidad" type="text" placeholder="Ej: Unidad 1-Protocolo de Servicio" class="luxury-input w-full rounded-lg px-3 py-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Capítulo (Opcional)</label>
+                                <input id="sa-capitulo" type="text" placeholder="Ej: Capítulo 1-Atención" class="luxury-input w-full rounded-lg px-3 py-2 text-xs">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">URL del Recurso</label>
+                                <div class="flex gap-2">
+                                    <input id="sa-url" type="url" placeholder="https://..." class="luxury-input flex-1 rounded-lg px-3 py-2 text-xs">
+                                    <button onclick="addTrainingContentItem()" class="luxury-btn-primary px-4 py-2 rounded-lg text-xs whitespace-nowrap">
+                                        ➕ Guardar Recurso
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sa-feedback" class="hidden text-xs font-semibold px-3 py-2 rounded-lg"></div>
+                    </div>
+
+                    <div id="non-superadmin-content-notice" class="glass-subpanel p-3.5 text-xs text-white/75 flex items-center justify-between">
+                        <span>👁️ Modo lectura: Visualizando el catálogo oficial de contenidos de cada capacitación. Solo el rol <strong class="text-[#CDD400]">Super Administrador</strong> puede agregar o eliminar recursos.</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-white/5 p-4 rounded-xl border border-white/15">
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Filtrar por Mes / Programa</label>
+                            <select id="cat-filter-mes" onchange="renderCatalogoContenidos()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todos los Meses / Programas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Filtrar por Capacitación</label>
+                            <select id="cat-filter-cap" onchange="renderCatalogoContenidos()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todas las Capacitaciones</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Buscar Unidad / Capítulo / Formato</label>
+                            <input id="cat-search-text" oninput="renderCatalogoContenidos()" type="text" placeholder="Ej: Acoso, .pdf, Scorm, Transmipass..." class="luxury-input w-full rounded-lg px-3.5 py-2 text-sm">
+                        </div>
+                    </div>
+
+                    <div id="catalogo-list-container" class="space-y-4"></div>
+                </div>
+
+                <!-- Tab 5: Auditoría & Usabilidad JSON (Exclusivo Super Administrador) -->
+                <div id="tab-content-auditoria" class="hidden space-y-6">
+                    <div class="glass-subpanel p-5 border border-[#CDD400]/50 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                        <div>
+                            <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#CDD400] text-[#001e47]">Exclusivo Super Administrador • Registro Automático JSON</span>
+                            <h4 class="text-lg font-extrabold text-white mt-1.5">Dashboard de Usabilidad y Huella de Auditoría de la Plataforma</h4>
+                            <p class="text-xs text-white/75 mt-0.5">
+                                Registra y sincroniza automáticamente en la nube cada conexión, consulta de colaborador/curso, contenido reproducido y descarga realizada (independiente de la caché del navegador).
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="refreshAuditLogsFromCloud()" class="luxury-btn-primary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                                <span>🔄</span>
+                                <span>Sincronizar Bitácora</span>
+                            </button>
+                            <button onclick="downloadAuditJsonFile()" class="luxury-btn-secondary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                                <span>{ }</span>
+                                <span>Descargar usabilidad_logs.json</span>
+                            </button>
+                            <button onclick="exportAuditCSV()" class="luxury-btn-secondary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                                <span>📥</span>
+                                <span>Exportar (.csv)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- KPIs de Usabilidad -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="glass-subpanel p-4">
+                            <p class="text-[11px] uppercase tracking-wider text-white/65 font-bold">Total Movimientos (Huella)</p>
+                            <p id="audit-kpi-total" class="text-3xl font-black text-white mt-1">0</p>
+                        </div>
+                        <div class="glass-subpanel p-4 border-[#CDD400]/35">
+                            <p class="text-[11px] uppercase tracking-wider text-[#CDD400] font-bold">Conexiones Registradas</p>
+                            <p id="audit-kpi-logins" class="text-3xl font-black text-[#CDD400] mt-1">0</p>
+                        </div>
+                        <div class="glass-subpanel p-4">
+                            <p class="text-[11px] uppercase tracking-wider text-white/75 font-bold">Consultas &amp; Vistas</p>
+                            <p id="audit-kpi-queries" class="text-3xl font-black text-white mt-1">0</p>
+                        </div>
+                        <div class="glass-subpanel p-4 border-[#CDD400]/35">
+                            <p class="text-[11px] uppercase tracking-wider text-[#CDD400] font-bold">Descargas &amp; Actas</p>
+                            <p id="audit-kpi-downloads" class="text-3xl font-black text-[#CDD400] mt-1">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Resumen de actividad por usuario -->
+                    <div class="glass-panel p-5 space-y-3 border border-white/15">
+                        <div class="flex justify-between items-center">
+                            <h5 class="text-sm font-extrabold text-[#CDD400] uppercase tracking-wider">👤 Actividad Consolidada por Usuario</h5>
+                            <span id="audit-sync-badge" class="text-[11px] text-white/70 font-mono">Sincronizado</span>
+                        </div>
+                        <div id="audit-users-summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                    </div>
+
+                    <!-- Filtros Bitácora -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-white/5 p-4 rounded-xl border border-white/15">
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Filtrar por Usuario</label>
+                            <select id="audit-filter-user" onchange="renderAuditTable()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todos los Usuarios</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Categoría de Acción</label>
+                            <select id="audit-filter-cat" onchange="renderAuditTable()" class="luxury-input w-full rounded-lg px-3 py-2 text-sm">
+                                <option value="ALL">Todas las Acciones</option>
+                                <option value="CONEXIÓN">🔑 Conexión / Sesión</option>
+                                <option value="CONSULTA">🔍 Consulta / Búsqueda</option>
+                                <option value="CONTENIDO">🎬 Contenido Reproducido</option>
+                                <option value="DESCARGA">📥 Descarga / Acta Generada</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#CDD400] uppercase mb-1">Buscar en Detalle</label>
+                            <input id="audit-search-text" oninput="renderAuditTable()" type="text" placeholder="Ej: Kelly, Acta, Word, CSV, Marzo..." class="luxury-input w-full rounded-lg px-3.5 py-2 text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Huella de Auditoría -->
+                    <div class="glass-panel rounded-xl overflow-hidden border border-white/15">
+                        <div class="w-full overflow-x-auto max-h-[420px]">
+                            <table class="w-full text-left text-xs sm:text-sm">
+                                <thead class="bg-[#001433]/95 text-[#CDD400] uppercase tracking-wider border-b border-white/15 font-bold sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-4 py-3">Fecha y Hora</th>
+                                        <th class="px-4 py-3">Usuario</th>
+                                        <th class="px-4 py-3">Rol</th>
+                                        <th class="px-4 py-3">Categoría</th>
+                                        <th class="px-4 py-3">Acción</th>
+                                        <th class="px-4 py-3">Detalle / Qué Consultó o Descargó</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="audit-table-body" class="divide-y divide-white/10"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL EXPLICATIVO DE RECURRENCIA Y CRITERIO -->
+    <!-- ============================================================ -->
+    <div id="recurrencia-info-modal" class="fixed inset-0 hidden bg-[#001433]/85 flex-col items-center justify-center z-[95] backdrop-blur-xl p-4">
+        <div class="glass-panel modal-shell w-full max-w-2xl overflow-hidden flex flex-col">
+            <div class="p-5 border-b border-white/15 flex justify-between items-center bg-black/35">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#CDD400] text-[#001e47]">Metodología de Cálculo</span>
+                    <h4 id="recurrencia-info-title" class="text-lg font-extrabold text-white mt-1">Explicación del Indicador</h4>
+                </div>
+                <button onclick="closeRecurrenciaInfoModal()" class="text-white/75 hover:text-[#CDD400] text-3xl leading-none px-2">&times;</button>
+            </div>
+            <div id="recurrencia-info-body" class="p-5 sm:p-6 space-y-4 text-sm text-white/90 overflow-y-auto max-h-[75vh]"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MEDIA PREVIEW MODAL (Video JWPlayer / PDF / SCORM) -->
+    <!-- ============================================================ -->
+    <div id="media-preview-modal" class="fixed inset-0 hidden bg-[#001433]/85 flex-col items-center justify-center z-[90] backdrop-blur-xl p-3 sm:p-6">
+        <div class="glass-panel w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden border border-[#CDD400]/50">
+            <div class="p-4 border-b border-white/15 flex justify-between items-center bg-black/40 gap-3">
+                <div class="min-w-0">
+                    <span id="media-modal-badge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#CDD400] text-[#001e47]">Recurso</span>
+                    <h4 id="media-modal-title" class="text-sm sm:text-base font-bold text-white truncate mt-1">Previsualización de Contenido</h4>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <a id="media-modal-external" href="#" target="_blank" rel="noopener noreferrer" class="luxury-btn-primary px-3 py-1.5 rounded-lg text-xs">
+                        Abrir en nueva pestaña ↗
+                    </a>
+                    <button onclick="closeMediaPreviewModal()" class="text-white/75 hover:text-[#CDD400] text-3xl leading-none px-2">&times;</button>
+                </div>
+            </div>
+            <div id="media-modal-body" class="flex-1 bg-black/80 min-h-[60vh] flex items-center justify-center overflow-hidden"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ACTA DE SOPORTE DISCIPLINARIO MODAL -->
+    <!-- ============================================================ -->
+    <div id="acta-modal" class="fixed inset-0 hidden bg-[#001433]/85 flex-col items-center justify-center z-[95] backdrop-blur-xl p-2 sm:p-6">
+        <div id="acta-modal-shell" class="glass-panel w-full max-w-4xl max-h-[94vh] flex flex-col overflow-hidden border border-[#CDD400]/50">
+            <div id="acta-modal-toolbar" class="p-4 border-b border-white/15 flex flex-wrap justify-between items-center bg-black/40 gap-3">
+                <div>
+                    <h4 class="text-base sm:text-lg font-extrabold text-[#CDD400]">Acta Oficial de Trazabilidad &amp; Soporte Gestión Humana</h4>
+                    <p class="text-xs text-white/70">Documento probatorio con datos personales, fecha primer ingreso, valoración, comentario, nota y contenido asignado.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="printActa()" class="luxury-btn-primary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                        <span>🖨️</span>
+                        <span>Imprimir / Guardar PDF</span>
+                    </button>
+                    <button onclick="downloadActaWord()" class="luxury-btn-secondary px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                        <span>📝</span>
+                        <span>Descargar Word (.doc)</span>
+                    </button>
+                    <button onclick="closeActaModal()" class="text-white/75 hover:text-[#CDD400] text-3xl leading-none px-2">&times;</button>
+                </div>
+            </div>
+            <div id="acta-scroll-body" class="p-4 sm:p-6 overflow-y-auto flex-1 bg-slate-900/60">
+                <div id="acta-printable-area" class="acta-paper rounded-xl p-6 sm:p-10 max-w-3xl mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LOGIN MODAL -->
+    <!-- ============================================================ -->
+    <div id="login-modal" class="fixed inset-0 hidden bg-[#001e47]/70 flex-col items-center justify-center z-[80] backdrop-blur-md p-4">
+        <div class="glass-panel w-full max-w-sm border border-[#CDD400]/35 shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-black/25">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-[#CDD400] flex items-center justify-center text-[#001e47]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Acceso Autorizado</h3>
+                </div>
+                <button onclick="closeLoginModal()" class="text-white/70 hover:text-white transition-all text-3xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-white/75 text-center">Ingresa tu número de documento o clave de acceso para habilitar Gestión Humana, Contenidos y Descargas.</p>
+                <div class="relative">
+                    <input id="login-password-input" type="password" placeholder="Contraseña o Documento"
+                        class="luxury-input w-full rounded-xl px-4 py-3 text-sm"
+                        onkeydown="if(event.key==='Enter') attemptLogin()">
+                </div>
+                <div id="login-error" class="hidden text-red-300 text-xs text-center font-medium bg-red-900/30 border border-red-400/30 rounded-lg px-3 py-2">
+                    ❌ Contraseña incorrecta. Intenta de nuevo.
+                </div>
+                <button onclick="attemptLogin()" class="luxury-btn-primary w-full py-3 rounded-xl text-sm">
+                    Ingresar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ADD USER MODAL (Super Admin only) -->
+    <!-- ============================================================ -->
+    <div id="add-user-modal" class="fixed inset-0 hidden bg-[#001e47]/70 flex-col items-center justify-center z-[80] backdrop-blur-md p-4">
+        <div class="glass-panel w-full max-w-md border border-[#CDD400]/35 overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-black/25">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-[#CDD400] flex items-center justify-center text-[#001e47]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Gestión de Usuarios y Permisos</h3>
+                </div>
+                <button onclick="closeAddUserModal()" class="text-white/70 hover:text-white transition-all text-3xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <div>
+                    <h4 class="text-xs font-bold text-[#CDD400] uppercase tracking-wider mb-3">Usuarios Registrados</h4>
+                    <div id="users-list" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+                </div>
+                <hr class="border-white/15">
+                <div>
+                    <h4 class="text-xs font-bold text-[#CDD400] uppercase tracking-wider mb-3">Agregar Nuevo Usuario</h4>
+                    <div class="space-y-3">
+                        <input id="new-user-name" type="text" placeholder="Nombre completo" class="luxury-input w-full rounded-lg px-4 py-2.5 text-sm">
+                        <input id="new-user-password" type="text" placeholder="Contraseña / Documento (ej: RB12345678)" class="luxury-input w-full rounded-lg px-4 py-2.5 text-sm">
+                        <select id="new-user-role" class="luxury-input w-full rounded-lg px-4 py-2.5 text-sm">
+                            <option value="Administrador">Administrador / Gestión Humana</option>
+                            <option value="Super Administrador">Super Administrador</option>
+                        </select>
+                        <div id="add-user-error" class="hidden text-red-300 text-xs text-center font-medium bg-red-900/30 border border-red-400/30 rounded-lg px-3 py-2"></div>
+                        <button onclick="addNewUser()" class="luxury-btn-primary w-full py-2.5 rounded-xl text-sm">
+                            ➕ Agregar Usuario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Online Indicator -->
+    <div id="online-indicator" class="fixed bottom-6 right-6 z-50 hidden" title="Conectado a Google Sheets">
+        <span class="relative flex h-4 w-4">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CDD400] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-4 w-4 bg-[#CDD400] shadow-[0_0_12px_rgba(205,212,0,0.9)]"></span>
+        </span>
+    </div>
+
+    <!-- Error Toast -->
+    <div id="error-toast" class="fixed top-6 right-6 z-50 hidden bg-red-600/90 text-white px-6 py-3 rounded-xl shadow-lg border border-red-400 backdrop-blur-md">
+        <span id="error-text" class="font-medium">Error de conexión</span>
+    </div>
+
+    <script src="script.js?v=3.0"></script>
+</body>
+</html>
